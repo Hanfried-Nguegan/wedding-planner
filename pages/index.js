@@ -1,124 +1,307 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import React, { useState } from "react";
+import Image from "next/image";
+import { Navigation, Pagination, Scrollbar, Controller } from "swiper";
+import { gsap, Power2 } from "gsap";
 
-const inter = Inter({ subsets: ['latin'] })
+import { Swiper, SwiperSlide } from "swiper/react";
+import Link from "next/link";
+import Loader from "@/components/Loader";
 
 export default function Home() {
+  const [textSwiper, setTextSwiper] = useState(null);
+  const [imgSwiper, setImgSwiper] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState("01");
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div>
+      <Loader />
+
+      <header className="home-header">
+        <div className="top-line">
+          <Link href="/" target="_blank" legacyBehavior>
+            <a className="logo">
+              <span className="logo__img-wrapper">
+                <Image
+                  width={50}
+                  height={50}
+                  src="/assets/imgs/logo.svg"
+                  alt="logo"
+                />
+              </span>
+              <span className="logo__text">WP</span>
+            </a>
+          </Link>
+          <div className="top-line__decoration"></div>
+          <div className="top-line__contacts">
+            Tel:<span className="top-line__numbers">699745270</span>
+            <span className="top-line__separator"></span>
+            <span className="top-line__address">
+              Location:<span className="top-line__text">Douala, CMR</span>
+            </span>
+          </div>
+          <div className="top-line__decoration"></div>
+          <div className="menu-button-container">
+            <div className="nav-button">
+              <span className="nos"></span>
+              <span className="ncs"></span>
+              <span className="nbs"></span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+        <div className="home-header__content">
+          <aside className="home-aside">
+            <div className="home-aside__decoration"></div>
+            <div className="home-aside__text">Contact</div>
+            <div className="home-aside__soc">
+              <div className="home-aside__soc-items">
+                <Link href="/" target="_blank" legacyBehavior>
+                  <a className="soc-item">
+                    <Image
+                      width={17}
+                      height={17}
+                      src="/assets/imgs/icons/instagram-brands.svg"
+                      alt="instagram"
+                    />
+                  </a>
+                </Link>
+                <Link href="/" target="_blank" legacyBehavior>
+                  <a className="soc-item">
+                    <Image
+                      width={17}
+                      height={17}
+                      src="/assets/imgs/icons/facebook-brands.svg"
+                      alt="facebook"
+                    />
+                  </a>
+                </Link>
+                <Link href="/" target="_blank" legacyBehavior>
+                  <a className="soc-item">
+                    <Image
+                      width={17}
+                      height={17}
+                      src="/assets/imgs/icons/twitter-brands.svg"
+                      alt="twitter"
+                    />
+                  </a>
+                </Link>
+                <Link href="/" target="_blank" legacyBehavior>
+                  <a className="soc-item">
+                    <Image
+                      width={17}
+                      height={17}
+                      src="/assets/imgs/icons/whatsapp-brands.svg"
+                      alt="whatsapp"
+                    />
+                  </a>
+                </Link>
+              </div>
+            </div>
+            <div className="home-aside__share-icon"></div>
+          </aside>
+          <div className="slider-container">
+            <div className="slider-text">
+              <Swiper
+                loop={false}
+                speed={2400}
+                mousewheel={{ invert: false }}
+                navigation={{
+                  nextEl: ".swiper-button-next",
+                  prevEl: ".swiper-button-prev",
+                }}
+                pagination={{ clickable: true, el: ".swiper-pagination" }}
+                scrollbar={{ draggable: true, el: ".swiper-scrollbar" }}
+                onSlideChange={(swiper) => {
+                  let newIndex = swiper.realIndex + 1;
+                  let newState =
+                    newIndex >= 10 ? newIndex.toString() : "0" + newIndex;
+                  gsap.to(".slider-pagination-count .current", 0.2, {
+                    force3D: true,
+                    y: -10,
+                    opacity: 0,
+                    ease: Power2.easeOut,
+                    onComplete: () => {
+                      gsap.to(".slider-pagination-count .current", 0.1, {
+                        force3D: true,
+                        y: 10,
+                      });
+                      setCurrentSlide(newState);
+                    },
+                  });
+                  gsap.to(".slider-pagination-count .current", 0.2, {
+                    force3D: true,
+                    y: 0,
+                    opacity: 1,
+                    delay: 0.3,
+                    ease: Power2.easeOut,
+                  });
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+                  (".slider-pagination-current");
+                }}
+                modules={[Controller, Navigation, Pagination, Scrollbar]}
+                onSwiper={(swiper) => setTextSwiper(swiper)}
+                controller={{ control: imgSwiper }}
+                onSlideNextTransitionStart={() => {
+                  gsap.to(".slider-circle", 2.8, {
+                    rotation: "+=30",
+                    ease: Power2.easeOut,
+                  });
+                }}
+                onSlidePrevTransitionStart={() => {
+                  gsap.to(".slider-circle", 2.8, {
+                    rotation: "-=30",
+                    ease: Power2.easeOut,
+                  });
+                }}
+              >
+                <SwiperSlide className="slider-text__slide">
+                  <div className="slider-text__content">
+                    <h2 className="slider-text__heading">
+                      Over 20,000 couples made <span>their weddings</span> with
+                      us
+                    </h2>
+                    <p className="slider-text__desc">
+                      We guide you through every step of the process to save you
+                      time. Explore vendors, websites, matching invites,
+                      registry, and more, in one place
+                    </p>
+                    <button className="button slider-text__button">
+                      <span>Get started</span>
+                    </button>
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide className="slider-text__slide">
+                  <div className="slider-text__content">
+                    <h2 className="slider-text__heading">
+                      Planning on the go is <span>so much</span> more fun
+                    </h2>
+                    <p className="slider-text__desc">
+                      Swipe to add registry items with Gift Shuffle, get happy
+                      alerts when guests buy gifts, share their mailing
+                      addresses, and RSVP
+                    </p>
+                    <button className="button slider-text__button">
+                      <span>Try Now</span>
+                    </button>
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide className="slider-text__slide">
+                  <div className="slider-text__content">
+                    <h2 className="slider-text__heading">
+                      we will help you have &nbsp;<span>the best</span> day ever
+                    </h2>
+                    <p className="slider-text__desc">
+                      Chat with an actual human advisor, read oodles of helpful
+                      Expert Advice, get free to change the dates with your
+                      paper purchase, and much more
+                    </p>
+                    <button className="button slider-text__button">
+                      <span>Contact Us</span>
+                    </button>
+                  </div>
+                </SwiperSlide>
+              </Swiper>
+            </div>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+            <div className="slider-img">
+              <Swiper
+                loop={false}
+                speed={2400}
+                parallax={true}
+                onSwiper={(swiper) => setImgSwiper(swiper)}
+                modules={[Controller, Pagination]}
+                controller={{ control: textSwiper }}
+                pagination={{
+                  el: ".slider-pagination-count .total",
+                  type: "custom",
+                  renderCustom: (swiper, current, total) => {
+                    return total >= 10 ? total : `0${total}`;
+                  },
+                }}
+              >
+                <SwiperSlide
+                  data-swiper-parallax={10000}
+                  className="slider-img__slide"
+                >
+                  <div className="slider-img__bg"></div>
+                </SwiperSlide>
+                <SwiperSlide
+                  data-swiper-parallax={40}
+                  className="slider-img__slide"
+                >
+                  <div className="slider-img__bg"></div>
+                </SwiperSlide>
+                <SwiperSlide
+                  data-swiper-parallax={40}
+                  className="slider-img__slide"
+                >
+                  <div className="slider-img__bg"></div>
+                </SwiperSlide>
+              </Swiper>
+            </div>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
+            <div className="slider-bottom">
+              <div className="slider-share">
+                <div className="slider-share__items">
+                  <Link href="/" target="_blank" legacyBehavior>
+                    <a className="soc-item slider-share__item">
+                      <Image
+                        width={17}
+                        height={17}
+                        src="/assets/imgs/icons/facebook-brands.svg"
+                        alt="facebook"
+                      />
+                    </a>
+                  </Link>
+                  <Link href="/" target="_blank" legacyBehavior>
+                    <a className="soc-item slider-share__item">
+                      <Image
+                        width={17}
+                        height={17}
+                        src="/assets/imgs/icons/twitter-brands.svg"
+                        alt="twitter"
+                      />
+                    </a>
+                  </Link>
+                  <Link href="/" target="_blank" legacyBehavior>
+                    <a className="soc-item slider-share__item">
+                      <Image
+                        width={17}
+                        height={17}
+                        src="/assets/imgs/icons/whatsapp-brands.svg"
+                        alt="whatsapp"
+                      />
+                    </a>
+                  </Link>
+                </div>
+              </div>
+              <div className="slider-pagination">
+                <div className="swiper-pagination"></div>
+              </div>
+              <div className="slider-scrollbar">
+                <div className="swiper-scrollbar"></div>
+              </div>
+              <div className="slider-navigation">
+                <div className="slider-navigation__container">
+                  <div className="swiper-button-prev"></div>
+                  <div className="swiper-button-next"></div>
+                </div>
+              </div>
+            </div>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+            <div className="slider-pagination-count">
+              <span className="current">{currentSlide}</span> /{" "}
+              <span className="total"></span>
+            </div>
+            <div className="slider-pagination-current">
+              {currentSlide}
+              <span className="slider-pagination-current__dot">.</span>
+            </div>
+
+            <div className="slider-circle"></div>
+          </div>
+        </div>
+      </header>
+    </div>
+  );
 }
